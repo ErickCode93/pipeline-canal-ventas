@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ventas-deployment
+  labels:
+    app: canal-ventas
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: canal-ventas
+  template:
+    metadata:
+      labels:
+        app: canal-ventas
+    spec:
+      containers:
+      - name: app-ventas
+        image: canal-ventas:v2 # <--- Cambiamos a v2 para romper la caché
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - configMapRef:
+            name: ventas-config

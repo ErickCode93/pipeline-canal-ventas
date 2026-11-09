@@ -1,0 +1,25 @@
+name: Pipeline Canal de Ventas CI/CD
+
+# ¿Cuándo se activa? Al hacer push a la rama principal
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Entorno virtual limpio que nos da GitHub
+
+    steps:
+    # Paso 1: Descargar el código del repositorio en el entorno virtual
+    - name: Checkout del codigo
+      uses: actions/checkout@v4
+
+    # Paso 2: Validar que el archivo app.py no tenga errores de sintaxis
+    - name: Validar Sintaxis de Python
+      run: python3 -m py_compile app.py
+
+    # Paso 3: Simular la compilación del contenedor Docker optimizado
+    - name: Construir Imagen Docker
+      run: |
+        docker build -t canal-ventas:github-actions-${{ github.sha }} .
+        echo "[SUCCESS] Imagen compilada y lista para producción."
