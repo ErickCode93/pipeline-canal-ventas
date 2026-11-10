@@ -6,6 +6,12 @@ metadata:
     app: canal-ventas
 spec:
   replicas: 3
+  # ⬇️ AQUÍ CONFIGURAMOS LA ESTRATEGIA DE DESPLIEGUE
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1       # Cuántos Pods extra podemos crear por encima de las 3 réplicas durante la actualización (Máximo 4 en total)
+      maxUnavailable: 0 # Cuántos Pods pueden estar caídos o no disponibles durante el despliegue (Garantiza 0 caídas)
   selector:
     matchLabels:
       app: canal-ventas
@@ -16,7 +22,7 @@ spec:
     spec:
       containers:
       - name: app-ventas
-        image: canal-ventas:v2 # <--- Cambiamos a v2 para romper la caché
+        image: canal-ventas:v2
         imagePullPolicy: Never
         ports:
         - containerPort: 5000
